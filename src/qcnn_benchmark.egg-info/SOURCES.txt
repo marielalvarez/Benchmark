@@ -5,6 +5,8 @@ src/qcnn_benchmark.egg-info/SOURCES.txt
 src/qcnn_benchmark.egg-info/dependency_links.txt
 src/qcnn_benchmark.egg-info/top_level.txt
 src/qcnn_benchmark/config/__init__.py
+src/qcnn_benchmark/config/loader.py
+src/qcnn_benchmark/config/schema.py
 src/qcnn_benchmark/data/__init__.py
 src/qcnn_benchmark/data/mnist.py
 src/qcnn_benchmark/data/sampling.py
@@ -12,6 +14,12 @@ src/qcnn_benchmark/execution/__init__.py
 src/qcnn_benchmark/metrics/__init__.py
 src/qcnn_benchmark/metrics/classification.py
 src/qcnn_benchmark/models/__init__.py
+src/qcnn_benchmark/models/_cnn_common.py
+src/qcnn_benchmark/models/cnn_gong_analoga.py
+src/qcnn_benchmark/models/cnn_hur_analoga.py
+src/qcnn_benchmark/models/cnn_wei_analoga.py
+src/qcnn_benchmark/models/qcnn_cong.py
+src/qcnn_benchmark/models/qcnn_gong.py
 src/qcnn_benchmark/models/qcnn_hur.py
 src/qcnn_benchmark/models/qcnn_wei.py
 src/qcnn_benchmark/noise/__init__.py
@@ -22,3 +30,8 @@ src/qcnn_benchmark/stats/__init__.py
 src/qcnn_benchmark/training/__init__.py
 src/qcnn_benchmark/training/init.py
 src/qcnn_benchmark/training/loop.py
+tests/test_config.py
+tests/test_models_and_training.py
+tests/test_representations.py
+tests/test_sampling.py
+tests/test_stats.py
