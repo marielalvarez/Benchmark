@@ -1,0 +1,85 @@
+# Configuración declarativa de E2 (shots finitos + ruido NISQ): 1024
+# shots fijos (`shots_budgets` con un solo valor -- se reutiliza el mismo
+# campo que E1 en vez de agregar uno nuevo solo para esto) + las 7
+# condiciones de `qcnn_benchmark.noise.NOISE_CONDITIONS` + transpilación a
+# un mapa de acoplamiento fijo de 16 qubits.
+#
+# ADVERTENCIA DE COSTO (ver la celda de estimación de costo de
+# E2_nisq_noise.ipynb, con números medidos, no solo escalados de E0/E1):
+# la simulación con canales de ruido corre sobre `default.mixed` (matriz
+# de densidad) en vez de `default.qubit` (estado puro), y el gradiente se
+# calcula por regla de desplazamiento de parámetro -- un solo gradiente de
+# UN ejemplo bajo la condición más severa ya toma minutos, no
+# milisegundos. El protocolo de entrenamiento abajo es el mismo que
+# E0/E1/E0B por consistencia experimental, pero NO asumas que corre en un
+# tiempo comparable -- el notebook mide el costo real antes de proponer
+# correr la matriz completa y probablemente recomiende reducir
+# n_updates/batch_size solo para E2.
+#
+# `models` es un placeholder, igual que en E1 (mismo MODELS_TO_RUN,
+# reutilizando WINNER_MODEL e INCLUDE_CONG_IN_E1_E2 ya decididos ahí):
+#
+#   config = config.model_copy(update={"models": MODELS_TO_RUN})
+
+experiment_id: E2_NISQ_NOISE
+description: >
+  ¿Cómo se degrada la exactitud de WINNER_MODEL (y de Cong, si
+  INCLUDE_CONG_IN_E1_E2) bajo las restricciones NISQ completas: 1024
+  shots + transpilación a un mapa de acoplamiento fijo de 16 qubits +
+  ruido de hardware (despolarizante, error de lectura, relajación
+  térmica, aislados y compuestos en 3 severidades)? El régimen más
+  realista de los cuatro (E0-E2) para responder la pregunta de
+  investigación del framework: cómo se comportan las QCNN al pasar de una
+  simulación analítica idealizada a condiciones NISQ realistas.
+
+datasets:
+  - name: coat_vs_shirt
+    source: fashion_mnist
+    class_pos: 4  # Coat
+    class_neg: 6  # Shirt
+  - name: "4_vs_9"
+    source: mnist
+    class_pos: 4
+    class_neg: 9
+  - name: "1_vs_0"
+    source: mnist
+    class_pos: 1
+    class_neg: 0
+
+models:
+  - placeholder_winner  # el notebook lo reemplaza por MODELS_TO_RUN (de E1_finite_shots.ipynb)
+
+shots_budgets: [1024]  # fijo -- un solo valor, no una barrida como en E1
+
+noise_conditions:
+  - none
+  - depolarizing_isolated
+  - readout_isolated
+  - relaxation_isolated
+  - composite_low
+  - composite_medium
+  - composite_high
+
+protocol:
+  batch_size: 25
+  n_updates: 500
+  learning_rate: 0.01
+  beta1: 0.9
+  beta2: 0.999
+  clip_norm: 5.0
+  val_check_every: 10
+  patience_checks: 5
+  min_delta: 0.0001
+
+n_seeds: 5
+seed_root: 0
+sample_seed: 20260802
+
+statistical_criterion:
+  aggregation: mean_per_dataset
+  ci_method: bootstrap_bca
+  n_bootstrap: 10000
+  confidence_level: 0.95
+  comparison_test: paired_sign_permutation
+  multiple_comparison_correction: holm
+  alpha: 0.05

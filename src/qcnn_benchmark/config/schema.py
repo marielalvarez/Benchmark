@@ -18,7 +18,7 @@ y entre-corridas siempre que la configuración declarada sea la misma.
 
 import hashlib
 import json
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -101,6 +101,13 @@ class ExperimentConfig(BaseModel):
     sample_seed: int
     statistical_criterion: StatisticalCriterion = StatisticalCriterion()
 
+    # Específicos de E1/E2 (`None` en E0A/E0_quantum_advantage/E0B, que no
+    # varían el presupuesto de shots ni condición de ruido -- ver
+    # `canonical_json`: un campo en `None` no entra al hash, así que
+    # agregarlos aquí no cambia el hash de las configs ya existentes).
+    shots_budgets: Optional[list[int]] = None  # E1: [256, 1024, 4096]
+    noise_conditions: Optional[list[str]] = None  # E2: las 7 de `qcnn_benchmark.noise.NOISE_CONDITIONS`
+
     def run_seeds(self) -> list[int]:
         """Las `n_seeds` semillas de ejecución, derivadas de `seed_root`
         (principio de "toda semilla deriva de una semilla raíz" del diseño
@@ -110,8 +117,12 @@ class ExperimentConfig(BaseModel):
 
     def canonical_json(self) -> str:
         """Serialización JSON canónica (claves ordenadas, sin espacios
-        ambiguos) usada para el hash -- estable entre corridas y máquinas."""
-        return json.dumps(self.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        ambiguos, campos en `None` excluidos) usada para el hash -- estable
+        entre corridas y máquinas, y entre versiones del esquema que solo
+        agregan un campo opcional nuevo que una config existente no usa
+        (`exclude_none=True`: agregar `shots_budgets`/`noise_conditions` no
+        cambió el hash de `configs/e0a.yaml`, ver test de regresión)."""
+        return json.dumps(self.model_dump(mode="json", exclude_none=True), sort_keys=True, separators=(",", ":"))
 
     def canonical_hash(self) -> str:
         """sha256 de `canonical_json()`, primeros 12 caracteres hex (estilo

@@ -1,0 +1,25 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/lib/python3.12/site-packages/jupyter_server/services/sessions/sessionmanager.py", line 14, in <module>
+    import sqlite3
+  File "/home/a01704264/Python-3.12.4/Lib/sqlite3/__init__.py", line 57, in <module>
+    from sqlite3.dbapi2 import *
+  File "/home/a01704264/Python-3.12.4/Lib/sqlite3/dbapi2.py", line 27, in <module>
+    from _sqlite3 import *
+ModuleNotFoundError: No module named '_sqlite3'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/bin/jupyter-notebook", line 5, in <module>
+    from notebook.app import main
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/lib/python3.12/site-packages/notebook/app.py", line 18, in <module>
+    from jupyter_server.serverapp import flags
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/lib/python3.12/site-packages/jupyter_server/serverapp.py", line 108, in <module>
+    from jupyter_server.gateway.managers import (
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/lib/python3.12/site-packages/jupyter_server/gateway/managers.py", line 32, in <module>
+    from ..services.sessions.sessionmanager import SessionManager
+  File "/home/a01704264/qcnn-mariel/benchmark_multifactorial_iee/.venv/lib/python3.12/site-packages/jupyter_server/services/sessions/sessionmanager.py", line 17, in <module>
+    from pysqlite2 import dbapi2 as sqlite3  # type:ignore[no-redef]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'pysqlite2'

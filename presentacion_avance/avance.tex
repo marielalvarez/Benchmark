@@ -1,0 +1,701 @@
+\documentclass[aspectratio=169]{beamer}
+
+% ============================================================
+% Preambulo: tema propio replicando el estilo visual de
+% context/diseno_experimentos.pdf (banda de titulo lavanda,
+% cajas de color redondeadas, numeracion "n / N") y la
+% numeracion de secciones de context/MARIELALVAREZ_QNN.pdf
+% (plan de trabajo).
+% ============================================================
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{helvet}
+\usepackage[table]{xcolor}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shadows}
+\usepackage{amssymb}
+
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+% ---------- paleta (muestreada de diseno_experimentos.pdf) ----------
+\definecolor{bmBand}{HTML}{D6D6F0}   % banda de titulo / caja de portada
+\definecolor{bmIndigo}{HTML}{1E1E79} % caja "framework" / marco primario
+\definecolor{bmBlue}{HTML}{1E50A0}   % caja "Optimizacion"
+\definecolor{bmGreen}{HTML}{14823C}  % caja "Pregunta de investigacion"
+\definecolor{bmAmber}{HTML}{B48200}  % caja "Principios" / "Control"
+\definecolor{bmFillBlue}{HTML}{F2F2FF}
+\definecolor{bmFillGreen}{HTML}{F2FFF2}
+\definecolor{bmFillAmber}{HTML}{FFFEE6}
+\definecolor{bmInk}{HTML}{1A1A1A}
+\definecolor{bmGrey}{HTML}{6B6B6B}
+\definecolor{bmRowAlt}{HTML}{ECECF7}
+
+\setbeamercolor{normal text}{fg=bmInk}
+\setbeamercolor{frametitle}{fg=bmInk,bg=bmBand}
+\setbeamercolor{title}{fg=bmInk}
+\setbeamercolor{structure}{fg=bmIndigo}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamerfont{normal text}{size=\small}
+
+% ---------- banda de titulo (sin sombra, ancho completo) ----------
+\setbeamertemplate{frametitle}{
+  \vskip-1pt
+  \begin{beamercolorbox}[wd=\paperwidth,sep=0.30cm,leftskip=0.35cm]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}
+}
+
+% ---------- pie de pagina: solo "n / N" en la esquina ----------
+\setbeamertemplate{footline}{
+  \hfill
+  \raisebox{2pt}{\color{bmGrey}\scriptsize\insertframenumber\,/\,\inserttotalframenumber}
+  \hspace{4pt}
+  \vspace{4pt}
+}
+
+% ---------- cajas de color (replican las de la p.2 y p.6) ----------
+\newcommand{\bmheading}[2]{\textbf{\color{#1}#2}\par\smallskip}
+
+\mdfdefinestyle{bmIndigoStyle}{backgroundcolor=bmFillBlue,linecolor=bmIndigo,
+  linewidth=0.8pt,roundcorner=6pt,innertopmargin=7pt,innerbottommargin=7pt,
+  innerleftmargin=9pt,innerrightmargin=9pt,skipabove=6pt,skipbelow=6pt}
+\mdfdefinestyle{bmBlueStyle}{backgroundcolor=bmFillBlue,linecolor=bmBlue,
+  linewidth=0.8pt,roundcorner=6pt,innertopmargin=7pt,innerbottommargin=7pt,
+  innerleftmargin=9pt,innerrightmargin=9pt,skipabove=6pt,skipbelow=6pt}
+\mdfdefinestyle{bmGreenStyle}{backgroundcolor=bmFillGreen,linecolor=bmGreen,
+  linewidth=0.8pt,roundcorner=6pt,innertopmargin=7pt,innerbottommargin=7pt,
+  innerleftmargin=9pt,innerrightmargin=9pt,skipabove=6pt,skipbelow=6pt}
+\mdfdefinestyle{bmAmberStyle}{backgroundcolor=bmFillAmber,linecolor=bmAmber,
+  linewidth=0.8pt,roundcorner=6pt,innertopmargin=7pt,innerbottommargin=7pt,
+  innerleftmargin=9pt,innerrightmargin=9pt,skipabove=6pt,skipbelow=6pt}
+
+% cajas de cuatro colores predefinidos, listas para usar
+\newmdenv[style=bmIndigoStyle]{indigobox}
+\newmdenv[style=bmBlueStyle]{bluebox}
+\newmdenv[style=bmGreenStyle]{greenbox}
+\newmdenv[style=bmAmberStyle]{amberbox}
+
+% ---------- tablas con banda alterna ----------
+\newcommand{\bandedtable}{\rowcolors{2}{white}{bmRowAlt}}
+
+% ---------- comando de encabezado de subseccion numerada (5.2 estilo) ----------
+\newcommand{\subsec}[2]{\textbf{\color{bmIndigo}#1.} #2}
+
+% ---------- resaltar el modelo ganador en tablas ----------
+\newcommand{\winner}[1]{\textbf{#1}}
+
+\title{Benchmark reproducible de QCNN bajo condiciones NISQ}
+\subtitle{Presentacion de avance}
+\author{Mariel Alvarez Salas}
+\date{17 de septiembre de 2026}
+
+\begin{document}
+
+% ============================================================
+% 1. PORTADA
+% ============================================================
+\begin{frame}[plain]
+  \vspace{1.2cm}
+  \begin{center}
+  \begin{tikzpicture}
+    \node[rounded corners=6pt, fill=bmBand, drop shadow,
+          text width=0.86\textwidth, align=center, inner sep=14pt] {
+      {\Large\bfseries Benchmark reproducible de QCNN bajo condiciones NISQ}\\[4pt]
+      {\normalsize Presentacion de avance de investigacion}
+    };
+  \end{tikzpicture}
+  \vspace{1.0cm}
+
+  \begin{tabular}{r l}
+    \textbf{Estudiante:} & Mariel Alvarez Salas \\
+    \textbf{Director:} & Dr. Leonardo Ledesma Dominguez \\
+    \textbf{Programa:} & Next Generation Scientists (NGS) \\
+    \textbf{Fecha:} & 17 de septiembre de 2026 \\
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+% ============================================================
+% 2. AGENDA
+% ============================================================
+\begin{frame}{2. Agenda}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{enumerate}
+        \setlength{\itemsep}{7pt}
+        \item[3.] Contexto y pregunta de investigacion
+        \item[4.] Diseno experimental
+        \item[5.] Arquitecturas evaluadas
+        \item[6.] Resultados E0A
+        \item[7.] Quantum Advantage
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{enumerate}
+        \setlength{\itemsep}{7pt}
+        \item[8.] Validez de la aportacion (E0B)
+        \item[9.] Resultados E1 (shots finitos)
+        \item[10.] Proximos pasos
+        \item[11.] Cierre
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+% 3. CONTEXTO Y PREGUNTA DE INVESTIGACION
+% ============================================================
+\begin{frame}{3. Contexto y pregunta de investigacion}
+  \begin{indigobox}
+    \bmheading{bmIndigo}{Pregunta central}
+    Que tan robustas son las conclusiones sobre el desempeno de una QCNN cuando se
+    transita de una simulacion analitica ideal a condiciones NISQ realistas: numero
+    finito de shots, ruido de hardware y conectividad limitada de qubits.
+  \end{indigobox}
+
+  \vspace{10pt}
+
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{greenbox}
+        \bmheading{bmGreen}{Lo que este proyecto no es}
+        No busca proponer una arquitectura QCNN nueva. El punto de partida son cuatro
+        arquitecturas ya publicadas.
+      \end{greenbox}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{amberbox}
+        \bmheading{bmAmber}{Lo que este proyecto es}
+        Un framework de benchmarking reproducible: configuracion declarativa con hash
+        canonico, seeds derivadas de una semilla raiz y separacion entre el nucleo del
+        benchmark y la logica propia de cada modelo.
+      \end{amberbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+% 4. DISENO EXPERIMENTAL
+% ============================================================
+\begin{frame}{4. Diseno experimental}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}p{2.1cm}p{6.6cm}p{3.1cm}@{}}
+    \toprule
+    \textbf{Fase} & \textbf{Pregunta que responde} & \textbf{Estado} \\
+    \midrule
+    E0A & Cual QCNN de la literatura (Hur, Wei, Gong) tiene mejor desempeno en
+          simulacion analitica, sobre los tres datasets del diseno vigente. &
+          Completo. 45 corridas. \\
+    Quantum Advantage & El QCNN ganador de E0A, supera a una CNN clasica con conteo
+          de parametros comparable. & Completo. 30 corridas. \\
+    E0B & El QCNN ganador de E0A, supera a una QCNN generica sin sesgo de diseno
+          (Cong et al.). & Completo. 30 corridas. \\
+    E1 & Como se degrada el desempeno del QCNN ganador al pasar a shots finitos
+          (256, 1024, 4096). & Completo. 45 corridas. \\
+    E2 & Como se degrada el desempeno bajo ruido de hardware y restricciones de
+          conectividad, sobre shots finitos. & Motor construido y validado.
+          Matriz completa pendiente. \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{4. Diseno experimental: cobertura de modelos por fase}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}p{2.3cm}p{6.4cm}p{3.1cm}@{}}
+    \toprule
+    \textbf{Fase} & \textbf{Modelos evaluados} & \textbf{Corridas} \\
+    \midrule
+    E0A & Los 3 candidatos de la literatura, Hur, Wei y Gong. & 45 \\
+    Quantum Advantage & Solo el ganador de E0A, contra su CNN analoga clasica. & 30 \\
+    E0B & Solo el ganador de E0A, contra Cong, la QCNN generica de referencia. & 30 \\
+    E1 & Solo el ganador de E0A, mas Cong si aplica. & 45 \\
+    E2 & Solo el ganador de E0A, mas Cong si aplica. & Pendiente \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{8pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que las fases posteriores a E0A no repiten los 3 candidatos}
+    Con 5 semillas por configuracion, un test de permutacion pareado tiene poca potencia
+    para detectar diferencias moderadas. Multiplicar por 3 el numero de comparaciones en
+    cada fase posterior diluiria esa potencia sin responder una pregunta nueva. El costo
+    de computo tambien crece rapido bajo shots finitos, ver la nota de viabilidad en la
+    seccion de proximos pasos.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{4. Diseno experimental: consistencia con el diseno original}
+  \footnotesize
+  \begin{bluebox}
+    \bmheading{bmBlue}{Lo que el diseno original si preveia}
+    El regimen de ruido, benchmark-noise en el diseno original, fijaba explicitamente 2
+    QCNN, no los 4 modelos de benchmark-core. La practica actual en E2, un ganador mas
+    Cong, es consistente con ese punto.
+  \end{bluebox}
+
+  \vspace{10pt}
+
+  \begin{amberbox}
+    \bmheading{bmAmber}{Lo que cambio despues del diseno original}
+    El diseno original, antes de agregar Gong y Cong, preveia correr benchmark-core, E0 y
+    E1, con sus 4 modelos de esa version, las 2 QCNN de Hur y Wei mas sus 2 CNN analogas
+    clasicas, sin un paso de seleccion de candidato. El embudo de E0A se agrego como
+    refinamiento posterior junto con Gong y Cong, y no esta documentado en ese diseno
+    original para la fase E1. Se mantiene aqui como decision de diseno confirmada, no
+    como continuacion silenciosa de un plan previo.
+  \end{amberbox}
+\end{frame}
+
+% ============================================================
+% 5. ARQUITECTURAS EVALUADAS
+% ============================================================
+\begin{frame}{\subsec{5.1}{QCNN Hur et al. (2022, Ansatz 8)}}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \begin{bluebox}
+        \bmheading{bmBlue}{Especificacion real}
+        8 qubits.\\
+        36 parametros entrenables.\\
+        Encoding: PCA densa a 16 componentes, angulo denso (dos componentes por
+        eje de Bloch, ``Angle-compact'').
+      \end{bluebox}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \begin{indigobox}
+        \bmheading{bmIndigo}{Idea central}
+        Tres etapas jerarquicas de convolucion y pooling (8 a 4 a 2 a 1 qubits)
+        con parametros compartidos entre aplicaciones de una misma etapa,
+        replicando la invariancia traslacional de una CNN clasica. Lectura en
+        base de Pauli-Z de un solo qubit.
+      \end{indigobox}
+    \end{column}
+  \end{columns}
+  \vspace{8pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que se incluyo}
+    Representa el extremo de codificacion por angulo de la literatura: maximiza
+    el numero de features por qubit sin usar codificacion de amplitud.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{\subsec{5.2}{QCNN Wei et al. (2021)}}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \begin{bluebox}
+        \bmheading{bmBlue}{Especificacion real}
+        10 qubits de trabajo.\\
+        46 parametros entrenables (9 del filtro convolucional, 37 del
+        hamiltoniano de lectura).\\
+        Encoding: amplitud directa (imagen con relleno a $32\times32$, 1024
+        amplitudes).
+      \end{bluebox}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \begin{indigobox}
+        \bmheading{bmIndigo}{Idea central}
+        Filtro convolucional $3\times3$ como combinacion lineal de unitarios
+        (LCU) sobre corrimientos de la imagen. Pooling que descarta 2 de los 10
+        qubits. Lectura con un hamiltoniano completo de 37 parametros
+        (identidad, Z, ZZ), no un solo observable.
+      \end{indigobox}
+    \end{column}
+  \end{columns}
+  \vspace{8pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que se incluyo}
+    Representa el extremo opuesto a Hur: codificacion de amplitud (maxima
+    compresion de informacion por qubit, mayor profundidad de circuito) en vez
+    de angulo. Nota de implementacion: el registro de 4 qubits ancilla del
+    filtro LCU del paper se reemplaza aqui por su equivalente clasico exacto
+    para el caso sin ruido, una combinacion lineal directa, en vez de simular
+    puertas controladas y post seleccion real.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{\subsec{5.3}{QCNN Gong et al. (2024)}}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \begin{bluebox}
+        \bmheading{bmBlue}{Especificacion real}
+        8 qubits.\\
+        36 parametros entrenables (mismo Circuit 6 de la familia Hur/Sim et
+        al.).\\
+        Encoding: tree-hybrid amplitude, bloques de 2 qubits, capacidad de 12
+        features (PCA a 8 componentes, relleno con ceros).
+      \end{bluebox}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \begin{indigobox}
+        \bmheading{bmIndigo}{Idea central}
+        Combina codificacion de angulo y de amplitud dividiendo los qubits en
+        bloques pequenos. Dentro de cada bloque usa rotaciones controladas en
+        arbol para aprovechar mejor la profundidad del circuito que el angulo
+        denso puro, sin normalizar cada bloque por separado.
+      \end{indigobox}
+    \end{column}
+  \end{columns}
+  \vspace{8pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que se incluyo}
+    Aporta una estrategia de encoding hibrida, intermedia entre Hur (angulo
+    denso) y Wei (amplitud pura). Permite evaluar si esa combinacion ofrece
+    una ventaja real.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{\subsec{5.4}{QCNN generica de Cong et al. (2019)}}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.42\textwidth}
+      \begin{bluebox}
+        \bmheading{bmBlue}{Especificacion real}
+        8 qubits.\\
+        51 parametros entrenables (45 de convolucion SU(4), 6 de pooling).\\
+        Encoding: angulo simple (PCA a 8 componentes, un feature por qubit).
+      \end{bluebox}
+    \end{column}
+    \begin{column}{0.58\textwidth}
+      \begin{indigobox}
+        \bmheading{bmIndigo}{Idea central}
+        Arquitectura QCNN fundacional y generica. Usa el unitario de
+        convolucion SU(4), el mas expresivo posible para 2 qubits, sin ningun
+        sesgo de diseno hacia una tarea especifica.
+      \end{indigobox}
+    \end{column}
+  \end{columns}
+  \vspace{8pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que se incluyo}
+    Sirve de referencia en E0B: verifica si la aportacion especifica del
+    modelo ganador de E0A (encoding denso, filtro LCU o tree-hybrid) realmente
+    aporta ventaja sobre una QCNN jerarquica generica sin ese diseno
+    particular.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{\subsec{5.5}{Comparativa de arquitecturas}}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}lccp{3.4cm}p{3.2cm}@{}}
+    \toprule
+    \textbf{Modelo} & \textbf{Qubits} & \textbf{Parametros} & \textbf{Encoding} &
+      \textbf{Rol en el benchmark} \\
+    \midrule
+    Hur  & 8  & 36 & PCA-16, angulo denso & Candidato (E0A) \\
+    \winner{Wei}  & 10 & 46 & Amplitud directa (1024) & Candidato (E0A), ganador \\
+    Gong & 8  & 36 & Tree-hybrid amplitude (PCA-8) & Candidato (E0A) \\
+    Cong & 8  & 51 & PCA-8, angulo simple & Referencia generica (E0B) \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% ============================================================
+% 6. RESULTADOS E0A
+% ============================================================
+\begin{frame}{6. Resultados E0A: media $\pm$ IC 95\% (bootstrap BCa)}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Hur} & \textbf{Wei} & \textbf{Gong} \\
+    \midrule
+    coat vs shirt & 73.48\% [71.98, 75.10] & \winner{77.10\% [76.68, 77.36]} & 74.10\% [73.42, 74.72] \\
+    4 vs 9        & 83.48\% [81.90, 84.18] & \winner{95.38\% [94.76, 95.74]} & 80.92\% [78.60, 83.20] \\
+    1 vs 0        & 98.92\% [98.58, 99.18] & \winner{99.24\% [98.96, 99.40]} & 98.74\% [98.64, 98.82] \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{10pt}
+  Cinco semillas por combinacion. Protocolo identico para los tres modelos: 500
+  actualizaciones como techo, lote de 25, early stopping con paciencia de 5
+  chequeos.
+\end{frame}
+
+\begin{frame}{6. Resultados E0A: honestidad estadistica}
+  \begin{amberbox}
+    \bmheading{bmAmber}{El piso del test con n=5 semillas}
+    La prueba de permutacion pareada de signo, con solo 5 semillas, tiene un
+    p-valor minimo posible de 0.0625 antes de corregir por comparaciones
+    multiples. Tras la correccion de Holm sobre las 9 comparaciones de E0A,
+    ninguna alcanza $p<0.05$, sin importar el tamano del efecto observado.
+  \end{amberbox}
+
+  \vspace{8pt}
+
+  \begin{greenbox}
+    \bmheading{bmGreen}{Por que se selecciono a Wei de todas formas}
+    Wei tiene la media mas alta en los tres datasets. Su intervalo de
+    confianza no se traslapa con el de Gong en los tres datasets, y con el de
+    Hur en dos de tres (se traslapa en 1 vs 0). El tamano de efecto es grande
+    donde mas importa: en 4 vs 9, Wei le gana a Hur y a Gong en 5 de 5
+    semillas ($d_z$ entre 5.1 y 6.3, probabilidad de superioridad entre 0.8 y
+    1.0). La seleccion se basa en el conjunto de esta evidencia, no en un
+    resultado marcado como significativo.
+  \end{greenbox}
+\end{frame}
+
+% ============================================================
+% 7. QUANTUM ADVANTAGE
+% ============================================================
+\begin{frame}{7. Quantum Advantage: Wei vs. CNN analoga}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Wei (QCNN)} & \textbf{CNN analoga} & \textbf{Traslape de IC} \\
+    \midrule
+    coat vs shirt & 77.10\% [76.68, 77.36] & 69.40\% [65.56, 72.96] & No \\
+    4 vs 9        & 95.38\% [94.76, 95.74] & 79.42\% [69.58, 84.86] & No \\
+    1 vs 0        & 99.24\% [98.96, 99.40] & 98.96\% [97.24, 99.62] & Si \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{10pt}
+  La CNN analoga (\texttt{cnn\_wei\_analoga}) tiene un conteo de parametros
+  comparable al de Wei, siguiendo el criterio de Gong et al. Tabla 4.
+
+  \vspace{6pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Significancia}
+    Igual que en E0A, con n=5 semillas ninguna comparacion alcanza $p<0.05$
+    tras Holm (los p ajustados son 0.19, 0.19 y 0.88). El tamano de efecto en
+    4 vs 9 y coat vs shirt es grande ($d_z$ de 1.6 a 1.7, probabilidad de
+    superioridad de 1.0), consistente con la ventaja de la QCNN, pero no
+    formalmente significativo.
+  \end{amberbox}
+\end{frame}
+
+% ============================================================
+% 8. E0B
+% ============================================================
+\begin{frame}{8. Validez de la aportacion (E0B): Wei vs. Cong}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Wei} & \textbf{Cong (generica)} & \textbf{Traslape de IC} \\
+    \midrule
+    coat vs shirt & 77.10\% [76.68, 77.36] & 73.64\% [71.80, 75.12] & No \\
+    4 vs 9        & 95.38\% [94.76, 95.74] & 84.02\% [79.87, 87.20] & No \\
+    1 vs 0        & 99.24\% [98.96, 99.40] & 98.74\% [98.40, 98.88] & No \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{10pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Significancia}
+    El intervalo de confianza de Wei no se traslapa con el de Cong en ninguno
+    de los tres datasets, y el tamano de efecto es grande en dos de ellos
+    ($d_z$ de 1.6 a 2.4). Aun asi, tras la correccion de Holm ninguna
+    comparacion alcanza $p<0.05$ (los tres p ajustados son 0.19). La evidencia
+    apunta a que la aportacion especifica de Wei si se traduce en ventaja
+    sobre una QCNN generica sin ese diseno, pero la confirmacion formal sigue
+    limitada por n=5.
+  \end{amberbox}
+\end{frame}
+
+% ============================================================
+% 9. RESULTADOS E1
+% ============================================================
+\begin{frame}{9. Resultados E1: exactitud de Wei por presupuesto de shots}
+  \footnotesize
+  \bandedtable
+  \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{256 shots} & \textbf{1024 shots} & \textbf{4096 shots} &
+      \textbf{E0A (referencia)} \\
+    \midrule
+    coat vs shirt & 63.54\% & 65.34\% & 68.34\% & 77.10\% \\
+    4 vs 9        & 80.70\% & 84.26\% & 84.82\% & 95.38\% \\
+    1 vs 0        & 98.42\% & 98.62\% & 98.64\% & 99.24\% \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{10pt}
+  La exactitud sube de forma monotona con el presupuesto de shots en los tres
+  datasets. Ninguna comparacion entre presupuestos alcanza $p<0.05$ tras Holm
+  (n=5 semillas), aunque el tamano de efecto en coat vs shirt y 4 vs 9 es
+  grande ($d_z$ hasta 8.4).
+
+  \vspace{6pt}
+  {\scriptsize\color{bmGrey} La columna ``E0A (referencia)'' \textbf{no es
+  directamente comparable}: ver la nota metodologica en la siguiente
+  diapositiva.}
+\end{frame}
+
+\begin{frame}{9. Resultados E1: nota metodologica importante (1/2)}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Wei perdio capacidad entrenable bajo shots}
+    En E0A y en Quantum Advantage, Wei entrena sus 46 parametros originales (9
+    del filtro convolucional, 37 del hamiltoniano). Bajo shots finitos, esto
+    no fue posible: PennyLane 0.45 no admite diferenciar, con un metodo
+    compatible con shots, un \texttt{StatePrep} cuyo vector de entrada depende
+    de un parametro entrenable.
+  \end{amberbox}
+
+  \vspace{10pt}
+
+  \begin{amberbox}
+    \bmheading{bmAmber}{El detalle tecnico}
+    La preparacion de estado de Wei (\texttt{MottonenStatePreparation}) exige
+    que su vector de entrada tenga norma 1. Perturbar los 9 parametros del
+    filtro convolucional para calcular su gradiente rompe esa norma, sin
+    importar si el metodo de diferenciacion es parameter-shift o SPSA.
+  \end{amberbox}
+\end{frame}
+
+\begin{frame}{9. Resultados E1: nota metodologica importante (2/2)}
+  \begin{greenbox}
+    \bmheading{bmGreen}{La correccion aplicada}
+    Los 9 parametros de preparacion de estado se congelan en un valor de
+    referencia fijo. En E1 (y en E2) solo se entrenan los 37 parametros del
+    hamiltoniano de lectura.
+  \end{greenbox}
+
+  \vspace{12pt}
+
+  \begin{indigobox}
+    \bmheading{bmIndigo}{Consecuencia para la interpretacion}
+    E1 no compara exactamente el mismo modelo que gano E0A, sino una version
+    de capacidad reducida (37 de 46 parametros). La degradacion observada
+    frente a la columna de referencia de E0A puede deberse, en parte, a esta
+    perdida de capacidad y no unicamente al regimen de shots finitos. Separar
+    ambos efectos queda pendiente.
+  \end{indigobox}
+\end{frame}
+
+% ============================================================
+% 10. PROXIMOS PASOS
+% ============================================================
+\begin{frame}{10. Proximos pasos (1/3): E2 y estado de las 4 familias de metricas}
+  \begin{bluebox}
+    \bmheading{bmBlue}{E2: shots finitos con ruido NISQ}
+    El motor de shots, ruido (despolarizante, error de lectura, relajacion
+    termica, aisladas y compuestas) y transpilacion a un mapa de acoplamiento
+    de 16 qubits ya esta construido y validado con pruebas de plomeria. La
+    matriz experimental completa no se ha ejecutado.
+  \end{bluebox}
+
+  \vspace{6pt}
+  \scriptsize
+  \bandedtable
+  \begin{tabular}{@{}p{2.2cm}p{6.6cm}p{2.7cm}@{}}
+    \toprule
+    \textbf{Familia} & \textbf{Estado} & \textbf{Fecha objetivo} \\
+    \midrule
+    Predictivas & Exactitud desde el inicio. Precision, recall, F1, balanced
+      accuracy y macro-F1 ya definidas, aplicadas desde E2. Backfill de E0,
+      E0A, Quantum Advantage y E0B, 150 corridas, pendiente. &
+      Backfill: fase III \\
+    Convergencia & Implementada de forma retroactiva, sin reentrenar. &
+      Completo \\
+    De recursos & Implementada: qubits, parametros entrenables y presupuesto
+      de shots por modelo. & Completo \\
+    Robustez & Bloqueada, depende de la matriz de E2. & Con E2 \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{10. Proximos pasos (2/3): viabilidad de expandir E1 a Hur y Gong}
+  \footnotesize
+  Se cronometraron actualizaciones de gradiente reales, parameter-shift, no
+  backprop, de Hur y Gong bajo 256 shots, el presupuesto mas bajo de E1,
+  sobre datos reales, antes de comprometerse a una matriz completa.
+
+  \vspace{6pt}
+  \bandedtable
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    \textbf{Modelo} & \textbf{Segundos por actualizacion} &
+      \textbf{Matriz completa estimada (45 corridas)} \\
+    \midrule
+    Hur  & 62.2 s & 389 h, unos 16 dias \\
+    Gong & 21.0 s & 131 h, unos 5 dias y medio \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{6pt}
+  \begin{amberbox}
+    \bmheading{bmAmber}{Por que Wei, ya ejecutado, es tan distinto}
+    Wei diferencia coeficientes de un hamiltoniano de lectura, una expansion
+    lineal barata. Hur y Gong diferencian los parametros del circuito
+    completo via parameter-shift, ordenes de magnitud mas caro bajo shots.
+  \end{amberbox}
+
+  \vspace{6pt}
+  \textbf{Recomendacion}: con el protocolo actual, 500 actualizaciones, lote
+  de 25, una expansion v1.1 de E1 a los 3 candidatos no es viable dentro de
+  la fase III. Es viable solo si se reduce el numero de actualizaciones, el
+  tamano de lote, o el barrido de presupuestos de shots, o si se paraleliza
+  en mas de una maquina.
+\end{frame}
+
+\begin{frame}{10. Proximos pasos (3/3): calendario planeado vs. ejecutado}
+  \scriptsize
+  \bandedtable
+  \begin{tabular}{@{}p{3.6cm}p{2.4cm}p{6.4cm}@{}}
+    \toprule
+    \textbf{Hito (plan de trabajo)} & \textbf{Fecha planeada} & \textbf{Estado real} \\
+    \midrule
+    Benchmark E0 completo & 2 sep 2026 & Completado, 27 ago 2026, solo exactitud \\
+    Backfill de metricas predictivas de E0 & No estaba en el plan original & En curso desde 21 sep 2026, ETA unas 6 h \\
+    Benchmark E0-E1 completo & 9 sep 2026 & E1 (solo Wei) completado 17 sep 2026. Ampliado a Hur+Wei+Gong: en curso desde 21 sep 2026, ETA no antes del 13 oct 2026 (~22 dias, ver diapositiva anterior) \\
+    Motor NISQ (E2) validado & 17 sep 2026 & Validado. Bug de transpilacion para Cong encontrado y corregido 18 sep 2026 \\
+    Benchmark de ruido ejecutado & 23 sep 2026 & No inicia hasta terminar la expansion de E1 (orden confirmado 21 sep 2026). ETA no antes de mediados de oct 2026 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{8pt}
+  Las fechas de E0 y E1 (primera corrida) provienen de las marcas de tiempo
+  de sus archivos de provenance. Las fechas ETA son proyecciones a partir
+  de costo medido, no garantias: el early stopping puede acortarlas algo,
+  no cambia el orden de magnitud. No se propone aqui una fecha de
+  recuperacion para el 23 de sep: se documenta el desfase y su causa.
+\end{frame}
+
+% ============================================================
+% 11. CIERRE
+% ============================================================
+\begin{frame}{11. Cierre}
+  \vspace{6pt}
+  \begin{indigobox}
+    \bmheading{bmIndigo}{Agradecimientos}
+    Al Dr. Leonardo Ledesma Dominguez, director de este proyecto, y al
+    programa Next Generation Scientists (NGS).
+  \end{indigobox}
+
+  \vspace{12pt}
+
+  \bmheading{bmIndigo}{Referencias principales}
+  \begin{itemize}
+    \small
+    \item Hur, T., Kim, L., Park, D. K. (2022). Quantum convolutional neural
+      network for classical data classification. \textit{Quantum Machine
+      Intelligence}.
+    \item Wei, S., Chen, Y., Zhou, Z., Long, G. (2021). A quantum
+      convolutional neural network on NISQ devices. \textit{arXiv:2104.06918}.
+    \item Gong, L.-H., Pei, J.-J., Zhang, T.-F., Zhou, N.-R. (2024). Quantum
+      convolutional neural network based on variational quantum circuits.
+      \textit{Optics Communications}, 550, 129993.
+    \item Cong, I., Choi, S., Lukin, M. D. (2019). Quantum convolutional
+      neural networks. \textit{Nature Physics}, 15, 1273-1278.
+  \end{itemize}
+\end{frame}
+
+\end{document}
